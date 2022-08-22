@@ -9,8 +9,12 @@ def add_artists(artist_name):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("insert into artists (artist_name) values (%s)",(artist_name,))
+    cursor.execute("select id from artists order by id desc")
+    id = cursor.fetchone()[0]
     conn.commit()
     conn.close()
+    return id
+
 
 
 def add_songs(song_name,artist_id,lyrics):
