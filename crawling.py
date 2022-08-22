@@ -3,10 +3,17 @@ import logging
 import os
 import requests
 from bs4 import BeautifulSoup
+import db
 logger = None
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description = "Web crawler")
     parser.add_argument("-d", "--debug", help = "Enable debug logging", action="store_true")
+    parser.add_argument("--db",help="name of the database to use",action="store_true",default="lyrics")
+    subcommands = parser.add_subparsers(help="Commands", dest="command", required=True)
+    subcommands.add_parser("initdb", help="Initialise the database")
+    subcommands.add_parser("crawl", help="starts web crawling")
     return parser.parse_args()
 
 
@@ -31,6 +38,7 @@ def get_artists(base):
     for link in track_link[0:5]:
         artists_list[link.text]  = link.a['href']
     return artists_list
+
 
 
 
@@ -75,14 +83,49 @@ def crawl(download_dir):
             f.close()
 
 
+
+def create_table(db_name):
+    conn = db.get_connection(db_name)
+    cursor = conn.cursor()
+    f = open("init.sql")
+    sql = f.read()
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
+
+
+
+def insert_table():
+    for artist_name,artist_link in get_artists("http://www.songlyrics.com/top-artists-lyrics.html").items():
+        last_id = db.add_artists(artist_name)
+        for song,song_link in get_songs((artist_link)).items():
+            song_name = song.replace("/","-")
+            song_lyrics = get_lyrics(song_link)
+            db.add_songs(song_name,last_id,song_lyrics)
+
+
+
+
 def main():
     args = parse_args()
     if args.debug:
         configure_logging(logging.DEBUG)
     else:
         configure_logging(logging.INFO)
-    crawl("artists")
-   
+
+
+    if args.command == 'initdb':
+        logger.info("initializing database")
+        create_table(args.db)
+
+    elif args.command == 'crawl':
+        logger.info("crawling started")
+        insert_table()
+        
+
+
+
+
 if __name__ == "__main__":
     main()
    
