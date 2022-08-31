@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1 class ="header">Artists</h1>
+     <p>
+        <ol>
+            {% for artist in artists%}
+            <li><a class="artist_link" href = "{{url_for('artist',aid=artist.id)}}">{{artist.name}}</a></li>
+            {%endfor%}
+        </ol>
+    </p>
+{% endblock %}
+
