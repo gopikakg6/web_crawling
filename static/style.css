@@ -1,0 +1,54 @@
+
+
+h1.header{
+        color: maroon;
+        text-align: center;
+        margin: 10pt;
+    }
+
+.artists {
+        color:lightblue;
+        border: 9pt;
+        text-decoration: none;
+        
+        
+    }
+    
+
+a.song_link,.artist_link {
+    display: block;
+    border-bottom: 1 dotted;
+    color: green; 
+    text-decoration: none; 
+    border:double gray;
+    background-color: beige;
+    
+    }
+div{
+        
+    text-decoration: none;
+        
+    }
+    .songs{
+        color: lightblue;
+
+    }
+    .song_link{
+        color: green;
+    }
+center.center{
+        color: crimson;
+    }
+    
+/* .row{
+    color: bisque;
+
+} */
+div.column{
+    color: black;
+    background-color:lightblue;
+    
+}
+div.column2{
+    background-color: beige;
+}
